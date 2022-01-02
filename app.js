@@ -237,7 +237,6 @@ viewer.flyTo(kaunas);
 
 document.getElementById("kaunas").addEventListener('click', function () {
   viewer.flyTo(kaunas, 5);
-  viewer.zoomIn(1);
 
 });
 
