@@ -9,6 +9,30 @@ var viewer = new Cesium.Viewer("cesiumContainer", {
   shouldAnimate: true,
 });
 
+
+var cities = [
+  {
+    name: 'Kaunas',
+    lat: '54.96',
+    lng: '23.9',
+  },
+  {
+    name: 'Vilnius',
+    lat: '54.6872',
+    lng: '25.2797',
+  },
+  {
+    name: 'Warsaw',
+    lat: '52.2297',
+    lng: '21.0122',
+  },
+  {
+    name: 'Berlin',
+    lat: '52.5200',
+    lng: '13.4050',
+  },
+];
+
 function createModel(url, height) {
   viewer.entities.removeAll();
 
@@ -121,10 +145,9 @@ var options = [
 
 
 
-
 // city 1 entity
 var kaunas = viewer.entities.add({
-  id: 'city1',
+  id: 'city0',
   position: Cesium.Cartesian3.fromDegrees(23.9036, 54.8985),
   label: {
     text: "Kaunas",
@@ -175,7 +198,7 @@ function drawLine(start, end) {
   });
 }
 
-var cityCount = 2;
+var cityCount = 1;
 function addCity(lat = 0, lng = 0, name = '', height = 0) {
   // city 2 entity 
   var newCity = viewer.entities.add({
@@ -186,7 +209,21 @@ function addCity(lat = 0, lng = 0, name = '', height = 0) {
       color: Cesium.Color.RED,
       outlineColor: Cesium.Color.BLACK,
       outlineWidth: 5
-    }
+    },
+    label: {
+      text: name,
+      fillColor: Cesium.Color.SKYBLUE,
+      outlineColor: Cesium.Color.BLACK,
+      outlineWidth: 0,
+      style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+      pixelOffset: new Cesium.Cartesian2(-50, -50),
+      translucencyByDistance: new Cesium.NearFarScalar(
+        1.5e2,
+        1.0,
+        1.5e8,
+        3.0
+      ),
+    },
   });
   cityCount++;
 
@@ -204,9 +241,9 @@ setInterval(function () {
 
 var startEntity = null;
 var endEntity = null;
-viewer.selectedEntityChanged.addEventListener(function(entity) {
+viewer.selectedEntityChanged.addEventListener(function (entity) {
   console.log(entity);
-  if(startEntity === null) {
+  if (startEntity === null) {
     startEntity = entity;
   } else {
     endEntity = entity;
@@ -228,26 +265,25 @@ function drawLineDynamic(start, end) {
   drawLine(startEntity._id, endEntity._id);
 }
 
-document.getElementById('draw-line').addEventListener('click', function() {
+document.getElementById('draw-line').addEventListener('click', function () {
   drawLineDynamic(startEntity, endEntity);
 });
 
 viewer.flyTo(kaunas);
-//   Sandcastle.addToolbarMenu(options);
 
 document.getElementById("kaunas").addEventListener('click', function () {
   viewer.flyTo(kaunas, 5);
 
 });
 
-document.getElementById("vilnius").addEventListener('click', function () {
-  viewer.flyTo(vilnius);
-});
 
 
 document.getElementById("add-city").addEventListener('click', function () {
-  addCity('25.279', '54.6872');
-  alert("new Citty added");
+  var newCity = cities[cityCount];
+
+  console.log("Next City to be added: ".newCity);
+  addCity(newCity.lng, newCity.lat, newCity.name);
+  alert("New City added: " + newCity.name);
 
   console.log(viewer.selectedEntity);
 });
